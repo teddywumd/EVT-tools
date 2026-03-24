@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EVT Decision Tool</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+    select, button { width: 100%; padding: 10px; margin: 10px 0; }
+    .result { font-size: 20px; font-weight: bold; margin-top: 20px; }
+    .green { color: green; }
+    .blue { color: blue; }
+    .orange { color: orange; }
+    .red { color: red; }
+  </style>
+</head>
+<body>
+
+<h2>🧠 EVT Decision Support Tool</h2>
+
+<label>Age Group</label>
+<select id="age">
+  <option>>=18y</option>
+  <option>6-17y</option>
+  <option>28d-5y</option>
+  <option><28d</option>
+</select>
+
+<label>Occlusion</label>
+<select id="occlusion">
+  <option>LVO</option>
+  <option>MVO dominant M2</option>
+  <option>MVO non-dominant/DVO</option>
+  <option>Basilar</option>
+</select>
+
+<label>Time</label>
+<select id="time">
+  <option>0-6h</option>
+  <option>6-24h</option>
+  <option>>24h</option>
+</select>
+
+<label>ASPECTS</label>
+<select id="aspects">
+  <option>6-10</option>
+  <option>3-5</option>
+  <option>0-2</option>
+</select>
+
+<label>Baseline mRS</label>
+<select id="mrs">
+  <option>0-1</option>
+  <option>2</option>
+  <option>3-4</option>
+  <option>>4</option>
+</select>
+
+<button onclick="evaluate()">Evaluate</button>
+
+<div id="result" class="result"></div>
+
+<script>
+function evaluate() {
+  const age = document.getElementById('age').value;
+  const occ = document.getElementById('occlusion').value;
+  const time = document.getElementById('time').value;
+  const aspects = document.getElementById('aspects').value;
+  const mrs = document.getElementById('mrs').value;
+
+  let result = "ID";
+  let cls = "";
+
+  if (occ === "LVO") {
+    if (time === "0-6h") {
+      if (aspects === "6-10") {
+        if (mrs === "0-1") { result = "EVT Class I"; cls="green" }
+        else if (mrs === "2") { result = "EVT 2a"; cls="blue" }
+        else if (mrs === "3-4") { result = "EVT 2b"; cls="orange" }
+        else { result = "No EVT"; cls="red" }
+      }
+    }
+    if (time === "6-24h" && mrs === "0-1") {
+      result = "EVT Class I"; cls="green";
+    }
+  }
+
+  if (occ === "MVO non-dominant/DVO") {
+    result = "No EVT (No Benefit)";
+    cls = "red";
+  }
+
+  if (occ === "Basilar") {
+    if (mrs === "0-1") { result = "EVT Class I"; cls="green" }
+    else if (mrs === "2") { result = "EVT 2a"; cls="blue" }
+  }
+
+  if (age === "<28d") {
+    result = "Insufficient Data";
+    cls = "";
+  }
+
+  const el = document.getElementById('result');
+  el.innerText = result;
+  el.className = "result " + cls;
+}
+</script>
+
+</body>
+</html>
